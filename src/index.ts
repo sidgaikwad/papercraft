@@ -11,6 +11,7 @@ import type { PDFOptions } from './types';
  */
 export async function generatePDF(options: PDFOptions): Promise<Buffer> {
   const browser = await chromium.launch({
+    channel: 'chrome',
     headless: true,
     timeout: 60000,
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
