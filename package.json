@@ -1,17 +1,84 @@
 {
   "name": "papercraft",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.1.0",
+  "description": "⚡ Craft beautiful PDFs from HTML using optimized Chrome pool",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "papercraft": "./dist/bin/papercraft.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.27.0",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun run build:lib && bun run build:cli",
+    "build:lib": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build:cli": "tsup bin/papercraft.ts --format cjs --no-splitting",
+    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "dev": "bun --watch examples/basic.ts",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
+    "lint": "eslint src bin tests --ext .ts",
+    "lint:fix": "eslint src bin tests --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"bin/**/*.ts\" \"tests/**/*.ts\" \"examples/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"bin/**/*.ts\" \"tests/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build && bun test && bun run lint",
+    "example:basic": "bun run examples/basic.ts",
+    "example:advanced": "bun run examples/advanced.ts",
+    "example:invoice": "bun run examples/invoice.ts"
+  },
+  "keywords": [
+    "pdf",
+    "html-to-pdf",
+    "pdf-generation",
+    "playwright",
+    "chrome",
+    "invoice",
+    "document",
+    "receipt",
+    "certificate",
+    "cli",
+    "typescript",
+    "bun"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/papercraft"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/papercraft/issues"
+  },
+  "homepage": "https://github.com/yourusername/papercraft#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.40.0"
+  },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "typescript": "^5.9.3"
+    "@types/bun": "^1.0.0",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "playwright": "^1.40.0",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
   }
 }
