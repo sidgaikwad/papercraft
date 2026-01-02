@@ -1,6 +1,7 @@
-import type { Page } from "playwright";
-import { ChromePool } from "./chrome-pool";
-import type { PDFOptions, GeneratorOptions } from "./types";
+import { chromium } from 'playwright';
+import type { Page } from 'playwright';
+import { ChromePool } from './chrome-pool';
+import type { PDFOptions, GeneratorOptions } from './types';
 
 export class PDFGenerator {
   private pool: ChromePool | null = null;
@@ -10,11 +11,11 @@ export class PDFGenerator {
     this.enablePool = options.enablePool ?? true;
 
     if (this.enablePool) {
-      const poolConfig: Record<string, any> = {};
-      if (options.maxBrowsers !== undefined) poolConfig.maxBrowsers = options.maxBrowsers;
-      if (options.maxPagesPerBrowser !== undefined) poolConfig.maxPagesPerBrowser = options.maxPagesPerBrowser;
-      if (options.browserArgs !== undefined) poolConfig.browserArgs = options.browserArgs;
-      this.pool = new ChromePool(poolConfig);
+      this.pool = new ChromePool({
+        maxBrowsers: options.maxBrowsers,
+        maxPagesPerBrowser: options.maxPagesPerBrowser,
+        browserArgs: options.browserArgs,
+      });
     }
   }
 
@@ -33,8 +34,11 @@ export class PDFGenerator {
       page = await this.pool.acquirePage();
     } else {
       // Fallback: create one-time browser
-      const { chromium } = await import("playwright");
-      const browser = await chromium.launch();
+      const browser = await chromium.launch({
+        headless: true,
+        timeout: 60000,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      });
       const context = await browser.newContext();
       page = await context.newPage();
     }
@@ -45,24 +49,24 @@ export class PDFGenerator {
 
       // Set content
       await page.setContent(html, {
-        waitUntil: options.waitUntil || "networkidle",
+        waitUntil: options.waitUntil || 'domcontentloaded',
         timeout: options.timeout || 30000,
       });
 
       // Generate PDF
       const pdf = await page.pdf({
-        format: options.format || "A4",
+        format: options.format || 'A4',
         landscape: options.landscape || false,
         margin: options.margin || {
-          top: "1cm",
-          bottom: "1cm",
-          left: "1cm",
-          right: "1cm",
+          top: '1cm',
+          bottom: '1cm',
+          left: '1cm',
+          right: '1cm',
         },
         printBackground: options.printBackground ?? true,
         displayHeaderFooter: options.displayHeaderFooter || false,
-        headerTemplate: options.headerTemplate || "",
-        footerTemplate: options.footerTemplate || "",
+        headerTemplate: options.headerTemplate || '',
+        footerTemplate: options.footerTemplate || '',
         preferCSSPageSize: options.preferCSSPageSize || false,
         scale: options.scale || 1,
       });
@@ -76,7 +80,8 @@ export class PDFGenerator {
         await this.pool.releasePage(page);
       } else {
         // Clean up one-time browser
-        await page.context().browser()?.close();
+        const browser = page.context().browser();
+        if (browser) await browser.close();
       }
     }
   }
@@ -87,7 +92,7 @@ export class PDFGenerator {
       <html>
         <head>
           <meta charset="UTF-8">
-          ${css ? `<style>${css}</style>` : ""}
+          ${css ? `<style>${css}</style>` : ''}
         </head>
         <body>
           ${html}

@@ -1,6 +1,6 @@
-import { chromium } from "playwright";
-import type { Browser, BrowserContext, Page } from "playwright";
-import type { PoolOptions } from "./types";
+import { chromium } from 'playwright';
+import type { Browser, BrowserContext, Page } from 'playwright';
+import type { PoolOptions } from './types';
 
 interface BrowserInstance {
   browser: Browser;
@@ -20,38 +20,37 @@ export class ChromePool {
     this.maxBrowsers = options.maxBrowsers || 3;
     this.maxPagesPerBrowser = options.maxPagesPerBrowser || 5;
     this.browserArgs = options.browserArgs || [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--disable-software-rasterizer",
-      "--disable-extensions",
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-software-rasterizer',
+      '--disable-extensions',
     ];
   }
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
-    console.log(
-      `🚀 Initializing Chrome pool with ${this.maxBrowsers} browsers...`
-    );
+    console.log(`🚀 Initializing Chrome pool with ${this.maxBrowsers} browsers...`);
 
     for (let i = 0; i < this.maxBrowsers; i++) {
       await this.createBrowserInstance();
     }
 
     this.isInitialized = true;
-    console.log("✅ Chrome pool ready");
+    console.log('✅ Chrome pool ready');
   }
 
   private async createBrowserInstance(): Promise<BrowserInstance> {
     const browser = await chromium.launch({
       args: this.browserArgs,
       headless: true,
+      timeout: 60000,
     });
 
     const context = await browser.newContext({
-      javaScriptEnabled: false, // PDFs don't need JS
+      javaScriptEnabled: false,
     });
 
     const instance: BrowserInstance = {
@@ -71,22 +70,21 @@ export class ChromePool {
     }
 
     // Find instance with capacity
-    let instance = this.instances.find(
-      (inst) => inst.activePages < this.maxPagesPerBrowser
-    );
+    let instance = this.instances.find((inst) => inst.activePages < this.maxPagesPerBrowser);
 
     // If all full, create new instance (up to max)
     if (!instance && this.instances.length < this.maxBrowsers) {
       instance = await this.createBrowserInstance();
     }
 
-    // If still no instance, wait and use first available
+    // If still no instance available, use the first one (guaranteed to exist after initialize)
     if (!instance) {
       instance = this.instances[0];
-    }
 
-    if (!instance) {
-      throw new Error("No browser instance available");
+      // Safety check (should never happen after initialize, but TypeScript needs it)
+      if (!instance) {
+        throw new Error('No browser instances available in the pool');
+      }
     }
 
     const page = await instance.context.newPage();
@@ -99,9 +97,7 @@ export class ChromePool {
     await page.close();
 
     // Find instance and decrement counter
-    const instance = this.instances.find(
-      (inst) => inst.context === page.context()
-    );
+    const instance = this.instances.find((inst) => inst.context === page.context());
 
     if (instance) {
       instance.activePages--;
@@ -109,7 +105,7 @@ export class ChromePool {
   }
 
   async close(): Promise<void> {
-    console.log("🔄 Closing Chrome pool...");
+    console.log('🔄 Closing Chrome pool...');
 
     await Promise.all(
       this.instances.map(async (inst) => {
@@ -120,16 +116,13 @@ export class ChromePool {
 
     this.instances = [];
     this.isInitialized = false;
-    console.log("✅ Chrome pool closed");
+    console.log('✅ Chrome pool closed');
   }
 
   getStats() {
     return {
       totalBrowsers: this.instances.length,
-      totalActivePages: this.instances.reduce(
-        (sum, inst) => sum + inst.activePages,
-        0
-      ),
+      totalActivePages: this.instances.reduce((sum, inst) => sum + inst.activePages, 0),
       maxBrowsers: this.maxBrowsers,
       maxPagesPerBrowser: this.maxPagesPerBrowser,
     };
