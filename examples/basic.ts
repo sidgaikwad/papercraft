@@ -1,27 +1,18 @@
-import { generatePDF } from "../src";
-import { writeFileSync } from "fs";
+import { generatePDF } from '../src';
+import { writeFileSync } from 'fs';
 
-async function main() {
-  console.log("Generating basic PDF...");
+console.log('🚀 Generating basic PDF with Bun...');
 
-  const pdf = await generatePDF({
-    html: `
-      <h1>Hello World!</h1>
-      <p>This is a simple PDF generated from HTML.</p>
-    `,
-    css: `
-      body {
-        font-family: Arial, sans-serif;
-        padding: 40px;
-      }
-      h1 {
-        color: #333;
-      }
-    `,
-  });
+const pdf = await generatePDF({
+  html: `
+    <div style="padding: 40px; font-family: Arial, sans-serif;">
+      <h1 style="color: #0066cc;">Hello from Papercraft!</h1>
+      <p>This PDF was generated using <strong>Bun</strong> ⚡</p>
+      <p>Generated at: ${new Date().toLocaleString()}</p>
+    </div>
+  `,
+});
 
-  writeFileSync("basic.pdf", pdf);
-  console.log("✅ PDF saved to basic.pdf");
-}
-
-main();
+writeFileSync('basic-output.pdf', pdf);
+console.log('✅ PDF saved to basic-output.pdf');
+console.log(`📊 Size: ${(pdf.length / 1024).toFixed(2)} KB`);
