@@ -1,1 +1,32 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test output
+coverage/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Generated files
+*.pdf
+examples/*.pdf
+
+# Logs
+*.log
+npm-debug.log*
