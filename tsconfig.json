@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    // Module & Target (Bun supports ESNext natively)
     "target": "ESNext",
     "module": "ESNext",
     "lib": [
@@ -8,14 +7,12 @@
     ],
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    // Output
     "outDir": "./dist",
     "rootDir": ".",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "emitDeclarationOnly": true,
-    // Type Checking
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": false,
@@ -23,15 +20,12 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    // Interop & Compatibility
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    // Performance
     "skipLibCheck": true,
-    // Bun-specific
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
     "types": [

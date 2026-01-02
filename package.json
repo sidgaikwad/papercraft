@@ -23,7 +23,7 @@
   "scripts": {
     "build": "bun run build:lib && bun run build:cli",
     "build:lib": "tsup src/index.ts --format cjs,esm --dts --clean",
-    "build:cli": "tsup bin/papercraft.ts --format cjs --no-splitting --bundle --external playwright",
+    "build:cli": "tsup bin/papercraft.ts --format cjs --no-splitting --external playwright --external ../src/index.js",
     "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
     "dev": "bun --watch examples/basic.ts",
     "test": "bun test",

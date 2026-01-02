@@ -76,14 +76,8 @@ async function main(): Promise<void> {
     process.exit(args.help ? 0 : 1);
   }
 
-  // Type guard: at this point args.input is guaranteed to be a string
-  if (typeof args.input !== 'string') {
-    console.error('❌ Input file is required');
-    process.exit(1);
-  }
-
-  const inputPath: string = args.input;
-  const outputPath: string = args.output ?? 'output.pdf';
+  const inputPath = args.input;
+  const outputPath = args.output ?? 'output.pdf';
 
   try {
     console.log('📄 Reading HTML file...');
