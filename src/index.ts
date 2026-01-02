@@ -5,7 +5,7 @@ export * from "./utils";
 
 // Convenience function for one-off generation
 import { chromium } from "playwright";
-import { PDFOptions } from "./types";
+import type { PDFOptions } from "./types";
 
 /**
  * Generate a PDF without managing pool (simple use case)
