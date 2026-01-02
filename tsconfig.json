@@ -14,6 +14,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "emitDeclarationOnly": true,
     // Type Checking
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -30,7 +31,6 @@
     "verbatimModuleSyntax": true,
     // Performance
     "skipLibCheck": true,
-    "incremental": true,
     // Bun-specific
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
