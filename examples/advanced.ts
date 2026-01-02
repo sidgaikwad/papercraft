@@ -1,44 +1,45 @@
-import { PDFGenerator } from "../src";
-import { writeFileSync } from "fs";
+import { PDFGenerator } from '../src';
+import { writeFileSync } from 'fs';
 
-async function main() {
-  // Create generator with pool
-  const generator = new PDFGenerator({
-    maxBrowsers: 3,
-    maxPagesPerBrowser: 5,
+console.log('🚀 Generating multiple PDFs with browser pool...');
+
+const generator = new PDFGenerator({
+  maxBrowsers: 3,
+  maxPagesPerBrowser: 5,
+});
+
+await generator.initialize();
+
+const startTime = performance.now();
+
+// Generate 10 PDFs concurrently
+const promises = Array.from({ length: 10 }, async (_, i) => {
+  const pdf = await generator.generate({
+    html: `
+      <div style="padding: 40px; text-align: center;">
+        <h1>Document #${i + 1}</h1>
+        <p>Generated at ${new Date().toISOString()}</p>
+        <p>Using Bun's blazing fast runtime ⚡</p>
+      </div>
+    `,
   });
 
-  await generator.initialize();
+  writeFileSync(`output-${i + 1}.pdf`, pdf);
+  console.log(`✅ Generated output-${i + 1}.pdf`);
+  return pdf;
+});
 
-  console.log("Generating multiple PDFs...");
+const pdfs = await Promise.all(promises);
 
-  // Generate multiple PDFs concurrently
-  const promises = [];
+const duration = performance.now() - startTime;
+const totalSize = pdfs.reduce((sum, pdf) => sum + pdf.length, 0);
 
-  for (let i = 1; i <= 10; i++) {
-    promises.push(
-      generator
-        .generate({
-          html: `
-          <div style="text-align: center; padding: 100px;">
-            <h1>Invoice #${i}</h1>
-            <p>Generated at ${new Date().toISOString()}</p>
-          </div>
-        `,
-        })
-        .then((pdf) => {
-          writeFileSync(`invoice-${i}.pdf`, pdf);
-          console.log(`✅ Generated invoice-${i}.pdf`);
-        })
-    );
-  }
+console.log('\n📊 Statistics:');
+console.log(`   Files: ${pdfs.length}`);
+console.log(`   Time: ${duration.toFixed(0)}ms`);
+console.log(`   Avg: ${(duration / pdfs.length).toFixed(0)}ms per PDF`);
+console.log(`   Total Size: ${(totalSize / 1024).toFixed(2)} KB`);
+console.log(`   Pool Stats:`, generator.getStats());
 
-  await Promise.all(promises);
-
-  console.log("\n📊 Pool Stats:", generator.getStats());
-
-  await generator.close();
-  console.log("\n✅ All done!");
-}
-
-main();
+await generator.close();
+console.log('\n✅ All done!');
