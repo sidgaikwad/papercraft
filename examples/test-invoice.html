@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #333;
+      padding-bottom: 20px;
+      margin-bottom: 40px;
+    }
+    .invoice-details {
+      margin-bottom: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .total {
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>INVOICE</h1>
+    <p>Invoice #INV-001</p>
+  </div>
+
+  <div class="invoice-details">
+    <p><strong>Bill To:</strong> John Doe</p>
+    <p><strong>Date:</strong> January 3, 2024</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Product A</td>
+        <td>2</td>
+        <td>$50.00</td>
+        <td>$100.00</td>
+      </tr>
+      <tr>
+        <td>Product B</td>
+        <td>1</td>
+        <td>$75.00</td>
+        <td>$75.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="total">
+    Total: $175.00
+  </div>
+</body>
+</html>
