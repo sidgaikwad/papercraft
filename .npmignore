@@ -1,0 +1,26 @@
+# Source
+src/
+tests/
+examples/
+
+# Config
+tsconfig.json
+tsconfig.build.json
+vitest.config.ts
+.eslintrc.json
+.prettierrc
+.prettierignore
+
+# Development
+*.test.ts
+*.spec.ts
+coverage/
+.github/
+
+# CI/CD
+.travis.yml
+.gitlab-ci.yml
+
+# Misc
+*.pdf
+.DS_Store

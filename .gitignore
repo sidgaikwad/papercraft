@@ -2,31 +2,50 @@
 node_modules/
 .pnpm-store/
 
-# Build output
+# Build
 dist/
 *.tsbuildinfo
+.tsup/
 
-# Test output
+# Test
 coverage/
+.nyc_output/
 
 # Environment
 .env
 .env.local
-
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+.env.*.local
 
 # Generated files
 *.pdf
 examples/*.pdf
+tests/*.pdf
 
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp
+tmp/
+temp/
