@@ -1,5 +1,10 @@
 import { generatePDF } from '../src';
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const invoiceHTML = `
 <!DOCTYPE html>
@@ -169,19 +174,32 @@ const invoiceHTML = `
 </html>
 `;
 
-console.log('📄 Generating invoice...');
+async function main() {
+  console.log('📄 Generating invoice...');
 
-const pdf = await generatePDF({
-  html: invoiceHTML,
-  format: 'A4',
-  margin: {
-    top: '1cm',
-    bottom: '1cm',
-    left: '1.5cm',
-    right: '1.5cm',
-  },
+  // Ensure output directory exists
+  const outputDir = join(__dirname, 'output');
+  mkdirSync(outputDir, { recursive: true });
+
+  const pdf = await generatePDF({
+    html: invoiceHTML,
+    format: 'A4',
+    margin: {
+      top: '1cm',
+      bottom: '1cm',
+      left: '1.5cm',
+      right: '1.5cm',
+    },
+  });
+
+  const outputPath = join(outputDir, 'invoice.pdf');
+  writeFileSync(outputPath, pdf);
+
+  console.log(`✅ Invoice saved to ${outputPath}`);
+  console.log(`📊 Size: ${(pdf.length / 1024).toFixed(2)} KB`);
+}
+
+main().catch((error) => {
+  console.error('❌ Error:', error);
+  process.exit(1);
 });
-
-writeFileSync('invoice.pdf', pdf);
-console.log('✅ Invoice saved to invoice.pdf');
-console.log(`📊 Size: ${(pdf.length / 1024).toFixed(2)} KB`);

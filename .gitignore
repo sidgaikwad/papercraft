@@ -49,3 +49,7 @@ Thumbs.db
 # Temp
 tmp/
 temp/
+
+examples/output/
+*.pdf
+!examples/output/.gitkeep

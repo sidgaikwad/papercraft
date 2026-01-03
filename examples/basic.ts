@@ -1,8 +1,18 @@
 import { generatePDF } from '../src';
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Get current directory (ESM compatible)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function main() {
   console.log('🚀 Generating basic PDF...');
+
+  // Ensure output directory exists
+  const outputDir = join(__dirname, 'output');
+  mkdirSync(outputDir, { recursive: true });
 
   const pdf = await generatePDF({
     html: `
@@ -14,8 +24,10 @@ async function main() {
     `,
   });
 
-  writeFileSync('basic-output.pdf', pdf);
-  console.log('✅ PDF saved to basic-output.pdf');
+  const outputPath = join(outputDir, 'basic-output.pdf');
+  writeFileSync(outputPath, pdf);
+
+  console.log(`✅ PDF saved to ${outputPath}`);
   console.log(`📊 Size: ${(pdf.length / 1024).toFixed(2)} KB`);
 }
 

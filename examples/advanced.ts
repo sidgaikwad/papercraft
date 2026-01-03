@@ -1,8 +1,17 @@
 import { PDFGenerator } from '../src';
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function main() {
   console.log('🚀 Generating multiple PDFs with browser pool...');
+
+  // Ensure output directory exists
+  const outputDir = join(__dirname, 'output');
+  mkdirSync(outputDir, { recursive: true });
 
   const generator = new PDFGenerator({
     maxBrowsers: 3,
@@ -25,8 +34,10 @@ async function main() {
       `,
     });
 
-    writeFileSync(`output-${i + 1}.pdf`, pdf);
-    console.log(`✅ Generated output-${i + 1}.pdf`);
+    const filename = `advanced-output-${i + 1}.pdf`;
+    const filepath = join(outputDir, filename);
+    writeFileSync(filepath, pdf);
+    console.log(`✅ Generated ${filename}`);
     return pdf;
   });
 
@@ -36,6 +47,7 @@ async function main() {
   const totalSize = pdfs.reduce((sum, pdf) => sum + pdf.length, 0);
 
   console.log('\n📊 Statistics:');
+  console.log(`   Output directory: ${outputDir}`);
   console.log(`   Files: ${pdfs.length}`);
   console.log(`   Time: ${duration.toFixed(0)}ms`);
   console.log(`   Avg: ${(duration / pdfs.length).toFixed(0)}ms per PDF`);
