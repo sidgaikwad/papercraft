@@ -58,12 +58,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/papercraft"
+    "url": "https://github.com/sidgaikwad/papercraft"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/papercraft/issues"
+    "url": "https://github.com/sidgaikwad/papercraft/issues"
   },
-  "homepage": "https://github.com/yourusername/papercraft#readme",
+  "homepage": "https://github.com/sidgaikwad/papercraft#readme",
   "engines": {
     "node": ">=18.0.0"
   },

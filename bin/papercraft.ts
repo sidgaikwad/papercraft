@@ -64,7 +64,7 @@ Examples:
   papercraft -i page.html -f Letter
 
 Documentation:
-  https://github.com/yourusername/papercraft
+  https://github.com/sidgaikwad/papercraft
   `);
 }
 

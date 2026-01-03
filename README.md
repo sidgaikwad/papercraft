@@ -1,4 +1,4 @@
-# @yourcompany/pdf-generator
+# papercraft-js
 
 ⚡ Fast, production-ready PDF generation from HTML using optimized Chrome pool.
 
@@ -14,7 +14,7 @@
 ## Installation
 
 ```bash
-npm install @yourcompany/pdf-generator playwright
+npm install papercraft-js playwright
 ```
 
 ## Quick Start
@@ -22,7 +22,7 @@ npm install @yourcompany/pdf-generator playwright
 ### Simple (one-off PDF)
 
 ```typescript
-import { generatePDF } from "@yourcompany/pdf-generator";
+import { generatePDF } from "papercraft-js";
 import { writeFileSync } from "fs";
 
 const pdf = await generatePDF({
@@ -36,7 +36,7 @@ writeFileSync("output.pdf", pdf);
 ### Advanced (with browser pool)
 
 ```typescript
-import { PDFGenerator } from "@yourcompany/pdf-generator";
+import { PDFGenerator } from "papercraft-js";
 
 const generator = new PDFGenerator({
   maxBrowsers: 3,
