@@ -16,10 +16,10 @@ coverage/
 .env.local
 .env.*.local
 
-# Generated files
+# Generated PDFs (but keep the output directory structure)
 *.pdf
-examples/*.pdf
-tests/*.pdf
+examples/output/*.pdf
+!examples/output/.gitkeep
 
 # Logs
 *.log
@@ -49,7 +49,3 @@ Thumbs.db
 # Temp
 tmp/
 temp/
-
-examples/output/
-*.pdf
-!examples/output/.gitkeep
