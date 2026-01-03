@@ -1,13 +1,13 @@
 import { generatePDF } from '../src';
 import { writeFileSync } from 'fs';
 
-console.log('🚀 Generating basic PDF with Bun...');
+console.log('🚀 Generating basic PDF...');
 
 const pdf = await generatePDF({
   html: `
     <div style="padding: 40px; font-family: Arial, sans-serif;">
       <h1 style="color: #0066cc;">Hello from Papercraft!</h1>
-      <p>This PDF was generated using <strong>Bun</strong> ⚡</p>
+      <p>This PDF was generated using Node.js + Playwright ⚡</p>
       <p>Generated at: ${new Date().toLocaleString()}</p>
     </div>
   `,
