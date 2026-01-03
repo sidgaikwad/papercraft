@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'bun:test';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { PDFGenerator, generatePDF } from '../src';
 
 describe('PDF Generator', () => {
@@ -20,10 +20,7 @@ describe('PDF Generator', () => {
 
     expect(pdf).toBeInstanceOf(Buffer);
     expect(pdf.length).toBeGreaterThan(0);
-
-    // Optional: save for manual inspection
-    // writeFileSync('tests/output/basic.pdf', pdf);
-  });
+  }, 30000); // 30 second timeout
 
   it('should apply custom CSS', async () => {
     const pdf = await generator.generate({
@@ -33,7 +30,7 @@ describe('PDF Generator', () => {
 
     expect(pdf).toBeInstanceOf(Buffer);
     expect(pdf.length).toBeGreaterThan(0);
-  });
+  }, 30000);
 
   it('should handle landscape orientation', async () => {
     const pdf = await generator.generate({
@@ -42,7 +39,7 @@ describe('PDF Generator', () => {
     });
 
     expect(pdf).toBeInstanceOf(Buffer);
-  });
+  }, 30000);
 
   it('should support different page formats', async () => {
     const formats = ['A4', 'Letter', 'Legal', 'A3'] as const;
@@ -56,7 +53,7 @@ describe('PDF Generator', () => {
       expect(pdf).toBeInstanceOf(Buffer);
       expect(pdf.length).toBeGreaterThan(0);
     }
-  });
+  }, 60000); // Longer timeout for multiple PDFs
 
   it('should generate PDF with margins', async () => {
     const pdf = await generator.generate({
@@ -70,7 +67,7 @@ describe('PDF Generator', () => {
     });
 
     expect(pdf).toBeInstanceOf(Buffer);
-  });
+  }, 30000);
 });
 
 describe('generatePDF helper', () => {
@@ -81,7 +78,7 @@ describe('generatePDF helper', () => {
 
     expect(pdf).toBeInstanceOf(Buffer);
     expect(pdf.length).toBeGreaterThan(0);
-  });
+  }, 30000);
 
   it('should handle complex HTML', async () => {
     const html = `
@@ -99,5 +96,5 @@ describe('generatePDF helper', () => {
 
     expect(pdf).toBeInstanceOf(Buffer);
     expect(pdf.length).toBeGreaterThan(0);
-  });
+  }, 30000);
 });

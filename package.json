@@ -28,6 +28,7 @@
     "dev": "tsx watch examples/basic.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src bin tests --ext .ts",
     "lint:fix": "eslint src bin tests --ext .ts --fix",
