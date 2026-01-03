@@ -19,13 +19,30 @@ export class ChromePool {
   constructor(options: PoolOptions = {}) {
     this.maxBrowsers = options.maxBrowsers || 3;
     this.maxPagesPerBrowser = options.maxPagesPerBrowser || 5;
+
+    // Better Windows-compatible args
     this.browserArgs = options.browserArgs || [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
       '--disable-gpu',
       '--disable-software-rasterizer',
       '--disable-extensions',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-breakpad',
+      '--disable-component-extensions-with-background-pages',
+      '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+      '--disable-ipc-flooding-protection',
+      '--disable-renderer-backgrounding',
+      '--force-color-profile=srgb',
+      '--mute-audio',
+      '--disable-webgl', // Critical for Windows GPU issues
+      '--disable-webgl2',
     ];
   }
 
@@ -34,7 +51,9 @@ export class ChromePool {
 
     console.log(`🚀 Initializing Chrome pool with ${this.maxBrowsers} browsers...`);
 
+    // Launch browsers sequentially to avoid resource conflicts
     for (let i = 0; i < this.maxBrowsers; i++) {
+      console.log(`   Launching browser ${i + 1}/${this.maxBrowsers}...`);
       await this.createBrowserInstance();
     }
 
@@ -44,13 +63,15 @@ export class ChromePool {
 
   private async createBrowserInstance(): Promise<BrowserInstance> {
     const browser = await chromium.launch({
-      args: this.browserArgs,
       headless: true,
-      timeout: 60000,
+      args: this.browserArgs,
+      timeout: 120000, // Increased timeout
+      ignoreDefaultArgs: ['--enable-automation'], // Remove automation flag
     });
 
     const context = await browser.newContext({
       javaScriptEnabled: false,
+      viewport: null, // Don't set viewport (faster)
     });
 
     const instance: BrowserInstance = {
@@ -69,19 +90,15 @@ export class ChromePool {
       await this.initialize();
     }
 
-    // Find instance with capacity
     let instance = this.instances.find((inst) => inst.activePages < this.maxPagesPerBrowser);
 
-    // If all full, create new instance (up to max)
     if (!instance && this.instances.length < this.maxBrowsers) {
       instance = await this.createBrowserInstance();
     }
 
-    // If still no instance available, use the first one (guaranteed to exist after initialize)
     if (!instance) {
       instance = this.instances[0];
 
-      // Safety check (should never happen after initialize, but TypeScript needs it)
       if (!instance) {
         throw new Error('No browser instances available in the pool');
       }
@@ -96,7 +113,6 @@ export class ChromePool {
   async releasePage(page: Page): Promise<void> {
     await page.close();
 
-    // Find instance and decrement counter
     const instance = this.instances.find((inst) => inst.context === page.context());
 
     if (instance) {

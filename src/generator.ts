@@ -33,27 +33,30 @@ export class PDFGenerator {
     if (this.pool) {
       page = await this.pool.acquirePage();
     } else {
-      // Fallback: create one-time browser
       const browser = await chromium.launch({
         headless: true,
-        timeout: 60000,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+        timeout: 120000,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+          '--disable-webgl',
+          '--disable-webgl2',
+        ],
       });
       const context = await browser.newContext();
       page = await context.newPage();
     }
 
     try {
-      // Build complete HTML
       const html = this.buildHTML(options.html, options.css);
 
-      // Set content
       await page.setContent(html, {
         waitUntil: options.waitUntil || 'domcontentloaded',
         timeout: options.timeout || 30000,
       });
 
-      // Generate PDF
       const pdf = await page.pdf({
         format: options.format || 'A4',
         landscape: options.landscape || false,
@@ -79,7 +82,6 @@ export class PDFGenerator {
       if (this.pool) {
         await this.pool.releasePage(page);
       } else {
-        // Clean up one-time browser
         const browser = page.context().browser();
         if (browser) await browser.close();
       }
