@@ -1,5 +1,5 @@
 {
-  "name": "papercraft",
+  "name": "papercraft-js",
   "version": "0.1.1",
   "description": "⚡ Craft beautiful PDFs from HTML using optimized Chrome pool",
   "main": "./dist/index.js",
